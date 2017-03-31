@@ -1,0 +1,54 @@
+Hi,
+
+I am attaching code with this mail. There are two folders in the ZIP file
+
+1) CROC Matlab Code: a single file containing Matlab code which implements
+the cutting plane algorithm for the pAUC metric. Try modifying this to
+suit CROC with concave amplification functions first. This will be simpler
+but the code will be slow.
+
+2) CROC C Code: a folder that contains C code for the cutting plane
+algorithm. This will be much faster. However, modify this later.
+
+doCuttingPlaneExperiment.m is the wrapper function which starts all the
+processing. It calls cross validation code (doCVForC.m) and the final
+wrapper (CuttingPlane.m).
+
+CuttingPlane.m calls the actual C code that does the learning. That is
+present in the folder cutting-plane-min-tpr-tnr.
+
+You will have to make changes to only one file in that folder
+svm_struct_api.c. The code implements MVC routines for a lot of
+performance measures including classification measures like min(tpr,tnr)
+(called fone in the code) and ranking measures like average precision
+(called avgprec in the code). Notice that these are all reward functions
+to be maximized and not loss functions that are minimized.
+
+You will have to modify the body of three functions in the file.
+
+1) find_most_violated_constraint_avgprec
+2) avgprec
+3) avgprec_compressed
+
+The first function computes the MVC for the ranking metric avgprec The
+last two just compute the reward value avgprec when the input is presented
+in two different forms. Do not change the name of these
+functions since these names are used at many different places. If you
+change the names of these functions, you will have to change them in many
+other functions as well.
+
+When you have modified the code and want to run it, you will have to
+compile the code (a Makefile is present) and invoke the struct SVM code
+with AVGPREC as the performance measure (if you do not change the name).
+Right now it is designed to optimize FONE (i.e. min(TPR,TNR)). The
+identifier for AVGPREC is 11. Right now the identifier used is 1, which is
+the identifier for FONE (see CuttingPlane.m line 44)
+
+You will have to change the wrapper functions CuttingPlane.m and
+doCuttingPlaneExperiment.m appropriately to call the C code to optimize
+AVGPREC instead (which is actually CROC).
+
+Please let me know if you have any doubts.
+
+Regards
+puru

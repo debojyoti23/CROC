@@ -140,7 +140,7 @@ end
 
 function ret = magExp(alpha,n)
 % function to compute exponential magnification over an array [1,2,...,n]
-% f(x)=(1+exp(-alpha*x))/(1+exp(-alpha))
+% f(x)=(1-exp(-alpha*x))/(1-exp(-alpha))
 % returns an array
 xlist = 0:n;
 xlist = xlist/n;
